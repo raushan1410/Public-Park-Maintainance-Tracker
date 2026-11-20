@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Report and track public park maintenance issues." name="description"/>
+  <title>
+   ParkCare | Public Park Maintenance Tracker
+  </title>
+  <link href="Style.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <!-- Main application layout: sidebar and page content -->
+  <div class="app-shell">
+   <!-- Sidebar: branding and navigation links -->
+   <aside class="sidebar" id="sidebar">
+    <a aria-label="ParkCare home" class="brand" href="#">
+     <span class="brand-mark">
+      🌳
+     </span>
+     <span>
+      <strong>
+       ParkCare
+      </strong>
+      <small>
+       PUBLIC PARKS
+      </small>
+     </span>
+    </a>
+    <div class="side-label">
+     WORKSPACE
+    </div>
+    <nav aria-label="Main navigation" class="nav-menu">
+     <button class="nav-link active" data-view="dashboard">
+      <span>
+       ▦
+      </span>
+      Dashboard
+     </button>
+     <button class="nav-link" data-view="parks">
+      <span>
+       ♧
+      </span>
+      Park catalogue
+     </button>
+     <button class="nav-link" data-view="report">
+      <span>
+       ＋
+      </span>
+      Report an issue
+     </button>
+     <button class="nav-link" data-view="issues">
+      <span>
+       ☷
+      </span>
+      Track issues
+      <span class="nav-count" id="navIssueCount">
+       0
+      </span>
+     </button>
+     <button class="nav-link" data-view="feedback">
+      <span>
+       &star;
+      </span>
+      Resident feedback
+     </button>
+     <button class="nav-link" data-view="analytics">
+      <span>
+       ▤
+      </span>
+      Analytics
+     </button>
+    </nav>
+    <div class="sidebar-bottom">
+     <div class="help-card">
+      <span class="help-icon">
+       🌱
+      </span>
+      <strong>
+       Every report helps.
+      </strong>
+      <p>
+       Together, we can keep our parks welcoming and safe.
+      </p>
+     </div>
+     <div class="sidebar-foot">
+      PARKCARE &middot; DEMO PROJECT
+     </div>
+    </div>
+   </aside>
+   <!-- Main content area: top bar and all application views -->
+   <main class="main-content">
+    <!-- Top bar: mobile menu, breadcrumb, and admin profile -->
+    <header class="topbar">
+     <button aria-label="Toggle navigation" class="mobile-menu icon-button" id="mobileMenu">
+      ☰
+     </button>
+     <div class="breadcrumb">
+      Workspace
+      <span>
+       /
+      </span>
+      <strong id="breadcrumbCurrent">
+       Dashboard
+      </strong>
+     </div>
+     <div class="topbar-right">
+      <span class="live-dot">
+      </span>
+      <span class="demo-label">
+       Demo workspace
+      </span>
+      <div class="avatar">
+       A
+      </div>
+      <div class="admin-label">
+       <strong>
+        Park Admin
+       </strong>
+       <small>
+        Administrator
+       </small>
+      </div>
+     </div>
+    </header>
+    <!-- Dashboard: summary cards, recent reports, charts, and parks -->
+    <section class="view active" id="view-dashboard">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow" id="todayLabel">
+        COMMUNITY PARK SERVICES
+       </p>
+       <h1>
+        Good day, Park Admin
+        <span>
+         🌿
+        </span>
+       </h1>
+       <p class="muted">
+        Here&rsquo;s what&rsquo;s happening across your parks today.
+       </p>
+      </div>
+      <button class="btn btn-primary" data-go="report">
+       ＋ Report an issue
+      </button>
+     </div>
+     <div class="stats-grid">
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Total reports
+        </span>
+        <span class="stat-icon green">
+         ☷
+        </span>
+       </div>
+       <div class="stat-number" id="statTotal">
+        0
+       </div>
+       <div class="stat-foot">
+        All reported maintenance issues
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Awaiting action
+        </span>
+        <span class="stat-icon amber">
+         ◷
+        </span>
+       </div>
+       <div class="stat-number" id="statPending">
+        0
+       </div>
+       <div class="stat-foot">
+        Submitted or assigned
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         In progress
+        </span>
+        <span class="stat-icon blue">
+         ⚒
+        </span>
+       </div>
+       <div class="stat-number" id="statProgress">
+        0
+       </div>
+       <div class="stat-foot">
+        Work currently underway
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Resolved
+        </span>
+        <span class="stat-icon green">
+         &checkmark;
+        </span>
+       </div>
+       <div class="stat-number" id="statResolved">
+        0
+       </div>
+       <div class="stat-foot">
+        <span class="positive" id="resolutionRate">
+         0%
+        </span>
+        of all reports
+       </div>
+      </article>
+     </div>
+     <div class="dashboard-grid">
+      <section class="panel recent-panel">
+       <div class="panel-heading">
+        <div>
+         <h2>
+          Recent reports
+         </h2>
+         <p class="muted">
+          Latest community maintenance reports
+         </p>
+        </div>
+        <button class="text-button" data-go="issues">
+         View all &rarr;
+        </button>
+       </div>
+       <div class="table-wrap">
+        <table>
+         <thead>
+          <tr>
+           <th>
+            ISSUE
+           </th>
+           <th>
+            PARK
+           </th>
+           <th>
+            PRIORITY
+           </th>
+           <th>
+            STATUS
+           </th>
+          </tr>
+         </thead>
+         <tbody id="recentIssues">
+         </tbody>
+        </table>
+       </div>
+      </section>
+      <section class="panel">
+       <div class="panel-heading">
+        <div>
+         <h2>
+          Issues by category
+         </h2>
+         <p class="muted">
+          Distribution of all reports
+         </p>
+        </div>
+       </div>
+       <div class="bar-chart" id="categoryChart">
+       </div>
+       <div class="chart-legend">
+        <span>
+         <i class="legend-dot">
+         </i>
+         Report count
+        </span>
+        <span id="categoryTotal">
+         0 reports
+        </span>
+       </div>
+      </section>
+     </div>
+     <section class="panel parks-overview">
+      <div class="panel-heading">
+       <div>
+        <h2>
+         Park catalogue
+        </h2>
+        <p class="muted">
+         A quick look at parks in your area
+        </p>
+       </div>
+       <button class="text-button" data-go="parks">
+        Explore parks &rarr;
+       </button>
+      </div>
+      <div class="park-grid" id="dashboardParks">
+      </div>
+     </section>
+    </section>
+    <!-- Park catalogue: search and filter the available parks -->
+    <section class="view" id="view-parks">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow">
+        EXPLORE YOUR GREEN SPACES
+       </p>
+       <h1>
+        Park catalogue
+       </h1>
+       <p class="muted">
+        Browse parks and see their reported maintenance issues.
+       </p>
+      </div>
+      <button class="btn btn-primary" data-go="report">
+       ＋ Report an issue
+      </button>
+     </div>
+     <div class="toolbar">
+      <label class="search-box">
+       &telrec;
+       <input aria-label="Search parks" id="parkSearch" placeholder="Search parks..."/>
+      </label>
+      <select aria-label="Filter parks" id="parkFilter">
+       <option value="all">
+        All parks
+       </option>
+       <option value="issues">
+        Parks with open issues
+       </option>
+      </select>
+     </div>
+     <div class="park-grid park-grid-large" id="parksGrid">
+     </div>
+    </section>
+    <!-- Report form: issue details, photo evidence, and reporter details -->
+    <section class="view" id="view-report">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow">
+        HELP US IMPROVE YOUR PARK
+       </p>
+       <h1>
+        Report a maintenance issue
+       </h1>
+       <p class="muted">
+        Tell us what needs attention. Fields marked * are required.
+       </p>
+      </div>
+     </div>
+     <form class="panel form-panel" id="reportForm">
+      <div class="form-section-title">
+       <span class="step-number">
+        1
+       </span>
+       <div>
+        <h2>
+         Issue details
+        </h2>
+        <p class="muted">
+         Describe the problem you noticed.
+        </p>
+       </div>
+      </div>
+      <div class="form-grid">
+       <label>
+        Park
+        <span class="required">
+         *
+        </span>
+        <select id="reportPark" required="">
+        </select>
+       </label>
+       <label>
+        Issue category
+        <span class="required">
+         *
+        </span>
+        <select id="reportCategory" required="">
+         <option value="">
+          Choose a category
+         </option>
+         <option>
+          Broken bench or equipment
+         </option>
+         <option>
+          Waste and litter
+         </option>
+         <option>
+          Lighting
+         </option>
+         <option>
+          Pathway damage
+         </option>
+         <option>
+          Water or irrigation
+         </option>
+         <option>
+          Landscaping
+         </option>
+         <option>
+          Public toilet
+         </option>
+         <option>
+          Other
+         </option>
+        </select>
+       </label>
+       <label class="full-width">
+        Issue title
+        <span class="required">
+         *
+        </span>
+        <input id="reportTitle" maxlength="90" placeholder="e.g. Broken bench near the main entrance" required=""/>
+       </label>
+       <label class="full-width">
+        Description
+        <span class="required">
+         *
+        </span>
+        <textarea id="reportDescription" maxlength="1000" placeholder="Describe the issue and why it needs attention..." required="" rows="4"></textarea>
+       </label>
+       <label>
+        Location within the park
+        <span class="required">
+         *
+        </span>
+        <input id="reportLocation" placeholder="e.g. Near the children's play area" required=""/>
+       </label>
+       <label>
+        Priority
+        <select id="reportPriority">
+         <option>
+          Low
+         </option>
+         <option selected="">
+          Medium
+         </option>
+         <option>
+          High
+         </option>
+         <option>
+          Urgent
+         </option>
+        </select>
+       </label>
+       <label class="full-width">
+        Photo evidence
+        <span class="optional">
+         (optional, max 1.5 MB)
+        </span>
+        <input accept="image/*" id="reportPhoto" type="file"/>
+        <span class="field-help">
+         Attach a photo that helps the maintenance team understand the problem.
+        </span>
+        <img alt="Selected issue photo preview" class="image-preview hidden" id="reportPhotoPreview"/>
+       </label>
+      </div>
+      <div class="form-section-title second-section">
+       <span class="step-number">
+        2
+       </span>
+       <div>
+        <h2>
+         Reporter details
+        </h2>
+        <p class="muted">
+         So the team can follow up if needed.
+        </p>
+       </div>
+      </div>
+      <div class="form-grid">
+       <label>
+        Your name
+        <input id="reporterName" maxlength="80" placeholder="Name (optional)"/>
+       </label>
+       <label>
+        Email
+        <input id="reporterEmail" placeholder="you@example.com" type="email"/>
+       </label>
+      </div>
+      <div class="form-actions">
+       <button class="btn btn-secondary" type="reset">
+        Clear form
+       </button>
+       <button class="btn btn-primary" type="submit">
+        Submit report &rarr;
+       </button>
+      </div>
+     </form>
+    </section>
+    <!-- Issue tracking: search and filter maintenance reports -->
+    <section class="view" id="view-issues">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow">
+        FOLLOW EVERY REPORT
+       </p>
+       <h1>
+        Issue tracking
+       </h1>
+       <p class="muted">
+        Assign reports, update progress, and document completed repairs.
+       </p>
+      </div>
+      <button class="btn btn-primary" data-go="report">
+       ＋ New report
+      </button>
+     </div>
+     <div class="toolbar issue-toolbar">
+      <label class="search-box">
+       &telrec;
+       <input aria-label="Search issues" id="issueSearch" placeholder="Search issues, parks or IDs..."/>
+      </label>
+      <select aria-label="Filter by status" id="statusFilter">
+       <option value="all">
+        All statuses
+       </option>
+       <option>
+        Submitted
+       </option>
+       <option>
+        Assigned
+       </option>
+       <option>
+        In Progress
+       </option>
+       <option>
+        Resolved
+       </option>
+       <option>
+        Reopened
+       </option>
+      </select>
+      <select aria-label="Filter by priority" id="priorityFilter">
+       <option value="all">
+        All priorities
+       </option>
+       <option>
+        Low
+       </option>
+       <option>
+        Medium
+       </option>
+       <option>
+        High
+       </option>
+       <option>
+        Urgent
+       </option>
+      </select>
+     </div>
+     <div class="issues-list" id="issuesList">
+     </div>
+    </section>
+    <!-- Resident feedback: ratings and comments from residents -->
+    <section class="view" id="view-feedback">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow">
+        LISTEN AND IMPROVE
+       </p>
+       <h1>
+        Resident feedback
+       </h1>
+       <p class="muted">
+        Feedback attached to resolved reports.
+       </p>
+      </div>
+     </div>
+     <div class="stats-grid two-stats">
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Average rating
+        </span>
+        <span class="stat-icon amber">
+         &starf;
+        </span>
+       </div>
+       <div class="stat-number" id="avgRating">
+        &mdash;
+       </div>
+       <div class="stat-foot">
+        Across submitted feedback
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Feedback received
+        </span>
+        <span class="stat-icon green">
+         ♡
+        </span>
+       </div>
+       <div class="stat-number" id="feedbackCount">
+        0
+       </div>
+       <div class="stat-foot">
+        Resident responses
+       </div>
+      </article>
+     </div>
+     <div class="feedback-list" id="feedbackList">
+     </div>
+    </section>
+    <!-- Analytics: report statistics, charts, and park performance -->
+    <section class="view" id="view-analytics">
+     <div class="page-heading">
+      <div>
+       <p class="eyebrow">
+        INSIGHTS FOR BETTER PARKS
+       </p>
+       <h1>
+        Maintenance analytics
+       </h1>
+       <p class="muted">
+        Use report trends to plan work and resources.
+       </p>
+      </div>
+      <button class="btn btn-secondary" id="exportBtn">
+       &darr; Export CSV
+      </button>
+     </div>
+     <div class="stats-grid">
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Resolution rate
+        </span>
+        <span class="stat-icon green">
+         &checkmark;
+        </span>
+       </div>
+       <div class="stat-number" id="analyticsResolution">
+        0%
+       </div>
+       <div class="stat-foot">
+        Reports marked resolved
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         High priority open
+        </span>
+        <span class="stat-icon amber">
+         !
+        </span>
+       </div>
+       <div class="stat-number" id="analyticsHigh">
+        0
+       </div>
+       <div class="stat-foot">
+        High or urgent unresolved reports
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Average rating
+        </span>
+        <span class="stat-icon blue">
+         &starf;
+        </span>
+       </div>
+       <div class="stat-number" id="analyticsRating">
+        &mdash;
+       </div>
+       <div class="stat-foot">
+        Resident satisfaction
+       </div>
+      </article>
+      <article class="stat-card">
+       <div class="stat-top">
+        <span>
+         Active parks
+        </span>
+        <span class="stat-icon green">
+         ♧
+        </span>
+       </div>
+       <div class="stat-number" id="analyticsParks">
+        0
+       </div>
+       <div class="stat-foot">
+        Parks in the catalogue
+       </div>
+      </article>
+     </div>
+     <div class="dashboard-grid analytics-grid">
+      <section class="panel">
+       <div class="panel-heading">
+        <div>
+         <h2>
+          Status breakdown
+         </h2>
+         <p class="muted">
+          Current state of every report
+         </p>
+        </div>
+       </div>
+       <div class="bar-chart" id="statusChart">
+       </div>
+      </section>
+      <section class="panel">
+       <div class="panel-heading">
+        <div>
+         <h2>
+          Category breakdown
+         </h2>
+         <p class="muted">
+          Where maintenance is needed
+         </p>
+        </div>
+       </div>
+       <div class="bar-chart" id="analyticsCategoryChart">
+       </div>
+      </section>
+     </div>
+     <section class="panel">
+      <div class="panel-heading">
+       <div>
+        <h2>
+         Park performance
+        </h2>
+        <p class="muted">
+         Open and resolved reports by park
+        </p>
+       </div>
+      </div>
+      <div class="table-wrap">
+       <table>
+        <thead>
+         <tr>
+          <th>
+           PARK
+          </th>
+          <th>
+           TOTAL REPORTS
+          </th>
+          <th>
+           OPEN
+          </th>
+          <th>
+           RESOLVED
+          </th>
+          <th>
+           RESOLUTION RATE
+          </th>
+         </tr>
+        </thead>
+        <tbody id="parkPerformance">
+        </tbody>
+       </table>
+      </div>
+     </section>
+    </section>
+    <!-- Footer: project name and closing message -->
+    <footer class="main-footer">
+     <span>
+      &copy; 2026 ParkCare &middot; Public Park Maintenance Tracker
+     </span>
+     <span>
+      Built for greener communities
+      <span class="footer-leaf">
+       &hearts;
+      </span>
+     </span>
+    </footer>
+   </main>
+  </div>
+  <!-- Toast notification shown by JavaScript -->
+  <div aria-live="polite" class="toast" id="toast" role="status">
+  </div>
+  <!-- Dialog used to view and update an individual issue -->
+  <dialog class="issue-dialog" id="issueDialog">
+   <div id="issueDialogContent">
+   </div>
+  </dialog>
+  <!-- JavaScript controls navigation, forms, storage, and dynamic content -->
+  <script src="Script.js">
+  </script>
+ </body>
+</html>
+
